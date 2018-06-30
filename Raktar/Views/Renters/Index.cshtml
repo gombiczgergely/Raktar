@@ -1,0 +1,79 @@
+﻿
+@model PagedList.IPagedList<Raktar.Models.Renter>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Renter";
+}
+
+<h2>    Kölcsönzők adatai </h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+    @using (Html.BeginForm("Index", "Renters", FormMethod.Get))
+    {
+        <p>
+            Keresés név alapján: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("Város", "Index", new { sortOrder = ViewBag.CitySortParm, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                Irányítószám
+            </th>
+            <th>
+                Utca házszám
+            </th>
+            <th>
+                Telefonszám
+            </th>
+            <th>
+                Email
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StreetAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mail)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.RenterID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.RenterID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.RenterID })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

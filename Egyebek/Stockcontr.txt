@@ -1,0 +1,133 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using Raktar.DAL;
+using Raktar.Models;
+
+namespace Raktar.Controllers
+{
+    public class StockController : Controller
+    {
+        private RaktarContext db = new RaktarContext();
+
+        // GET: Stock
+        public ActionResult Index()
+        {
+            var stock = db.Stock.Include(s => s.Equipment);
+            return View(stock.ToList());
+        }
+
+        // GET: Stock/Details/5
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Stock stock = db.Stock.Find(id);
+            if (stock == null)
+            {
+                return HttpNotFound();
+            }
+            return View(stock);
+        }
+
+        // GET: Stock/Create
+        public ActionResult Create()
+        {
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe");
+            return View();
+        }
+
+        // POST: Stock/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "StockID,EquipmentID,InStock,SQuantity")] Stock stock)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Stock.Add(stock);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", stock.EquipmentID);
+            return View(stock);
+        }
+
+        // GET: Stock/Edit/5
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Stock stock = db.Stock.Find(id);
+            if (stock == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", stock.EquipmentID);
+            return View(stock);
+        }
+
+        // POST: Stock/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "StockID,EquipmentID,InStock,SQuantity")] Stock stock)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(stock).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", stock.EquipmentID);
+            return View(stock);
+        }
+
+        // GET: Stock/Delete/5
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Stock stock = db.Stock.Find(id);
+            if (stock == null)
+            {
+                return HttpNotFound();
+            }
+            return View(stock);
+        }
+
+        // POST: Stock/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            Stock stock = db.Stock.Find(id);
+            db.Stock.Remove(stock);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

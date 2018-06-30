@@ -1,0 +1,21 @@
+insert into felhasznalo values('F1234', 'bela1', 'Almási Béla', 'Miskolc', 3200, 'kosuth lajos', 06205484658, 'jhgdf@freemail.hu');
+insert into felhasznalo values('F4321','sanyi2', 'Kosuth Lajos', 'Budapest', 0254, 'Mátyás', 06705467852,'fdgdfh@gmail.com');
+
+
+insert into aru values('siléc+kötés', 's1111', 'Atomic', 'Cloud 7 LT', 'Atomic', 'XTL 9 L', 'kötés', 55000, netto_ar*1.25, null);
+insert into aru values('snowboard', 's2222', 'Atomic', 'Vantage', 'Atomic', 'Straight Shot', 'kötés', 63000, null, null);
+insert into aru values('snowboard', 's3333', 'Atomic', 'Vantage', 'Atomic', 'Straight Shot', 'kötés', 63000, null, null);
+
+
+insert into rendelesek values('r3333', 'F1234', 's1111', 1, to_date('2011.01.15','yyyy.mm.dd'));
+insert into rendelesek values('r4444', 'F1234', 's2222', 2, to_date('2011.01.19','yyyy.mm.dd'))
+insert into rendelesek values('r4444', 'F1234', 's3333', 2, to_date('2011.01.19','yyyy.mm.dd'))
+insert into raktar values('b8888', 's1111', 'igen', 5);
+insert into raktar values('v9999', 's1111', 'nem', null);
+
+
+insert into kiszallitas values('k5555', 'r3333', to_date('2011.02.15','yyyy.mm.dd'))
+insert into kiszallitas values('k5566', 'r4444', to_date('2011.03.15','yyyy.mm.dd'))
+
+
+select sum(brutto_ar) FROM rendelesek r , aru a WHERE r.datum='11-JAN. -19' and r.aru=a.raktari_id;

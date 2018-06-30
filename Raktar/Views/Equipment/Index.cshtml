@@ -1,0 +1,91 @@
+﻿@model PagedList.IPagedList<Raktar.Models.Equipment>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Equipment";
+}
+
+<h2>Felszerelések</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Equipment", FormMethod.Get))
+{
+    <p>
+        Keresés Márka alapján: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Leirás", "Index", new { sortOrder = ViewBag.DescriptSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Márka", "Index", new { sortOrder = ViewBag.BrandSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            Tipus
+        </th>
+        <th>
+            Kiegészítő márkája
+        </th>
+        <th>
+            Kiegészítő tipusa
+        </th>
+        <th>
+            Kiegészítő leirása
+        </th>
+        <th>
+            Nettó ár
+        </th>
+        <th>
+            Bruttó ár
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Describe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdditionalBrand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdditionalType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdditionalDescribe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NettoPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BruttoPrice)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EquipmentID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EquipmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.EquipmentID })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, ViewBag.pageMaret }))

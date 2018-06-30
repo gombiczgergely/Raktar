@@ -1,0 +1,137 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using Raktar.DAL;
+using Raktar.Models;
+
+namespace Raktar.Controllers
+{
+    public class LoanController : Controller
+    {
+        private RaktarContext db = new RaktarContext();
+
+        // GET: Loan
+        public ActionResult Index()
+        {
+            var loan = db.Loan.Include(l => l.Equipment).Include(l => l.Renter);
+            return View(loan.ToList());
+        }
+
+        // GET: Loan/Details/5
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Loan loan = db.Loan.Find(id);
+            if (loan == null)
+            {
+                return HttpNotFound();
+            }
+            return View(loan);
+        }
+
+        // GET: Loan/Create
+        public ActionResult Create()
+        {
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe");
+            ViewBag.RenterID = new SelectList(db.Renter, "RenterID", "Name");
+            return View();
+        }
+
+        // POST: Loan/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "LoanID,RenterID,EquipmentID,Quantity,Date")] Loan loan)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Loan.Add(loan);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", loan.EquipmentID);
+            ViewBag.RenterID = new SelectList(db.Renter, "RenterID", "Name", loan.RenterID);
+            return View(loan);
+        }
+
+        // GET: Loan/Edit/5
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Loan loan = db.Loan.Find(id);
+            if (loan == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", loan.EquipmentID);
+            ViewBag.RenterID = new SelectList(db.Renter, "RenterID", "Name", loan.RenterID);
+            return View(loan);
+        }
+
+        // POST: Loan/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "LoanID,RenterID,EquipmentID,Quantity,Date")] Loan loan)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(loan).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.EquipmentID = new SelectList(db.Equipment, "EquipmentID", "Describe", loan.EquipmentID);
+            ViewBag.RenterID = new SelectList(db.Renter, "RenterID", "Name", loan.RenterID);
+            return View(loan);
+        }
+
+        // GET: Loan/Delete/5
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Loan loan = db.Loan.Find(id);
+            if (loan == null)
+            {
+                return HttpNotFound();
+            }
+            return View(loan);
+        }
+
+        // POST: Loan/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            Loan loan = db.Loan.Find(id);
+            db.Loan.Remove(loan);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

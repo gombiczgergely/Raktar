@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="RaktarContext2-Web.config Connection String" description="RaktarContext2 Connection String used in web.config by the application to access the database." defaultValue="Data Source=.;Initial Catalog=Raktar;Integrated Security=SSPI;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="e:\\Programozás\\asp\ \.net\\MVC\\Probak\\Raktar\\Raktar\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='RaktarContext2']/@connectionString" />
+  </parameter>
+</parameters>

@@ -1,0 +1,18 @@
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            try
+            {
+                Renter renter = db.Renter.Find(id);
+                db.Renter.Remove(renter);
+                db.SaveChanges();
+                //return RedirectToAction("Index");
+            }
+            catch (DataException/* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
+            return RedirectToAction("Index");
+        }
